@@ -1,0 +1,136 @@
+aid: arkham-intelligence
+url: https://raw.githubusercontent.com/api-evangelist/arkham-intelligence/refs/heads/main/apis.yml
+name: Arkham Intelligence
+kind: company
+description: >-
+  Arkham operates two related products. Arkham Intelligence (the Arkham
+  Platform / Intel) is an onchain entity intelligence service that labels
+  wallets and contracts with real-world identities and exposes them through
+  a web app, intel exchange (Dreadnought / bounties), and an API for entity
+  lookups, address profiles, balances, and transaction history. Arkham
+  Exchange (arkm.com) is a centralized crypto exchange that publishes a
+  REST and WebSocket trading API for spot and perpetual markets. Both share
+  the ARKM token and operate under the same parent.
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+tags:
+  - Onchain Intelligence
+  - Entity Resolution
+  - Crypto Exchange
+  - Trading
+  - Market Data
+  - Crypto
+  - Web3
+created: '2026-05-23'
+modified: '2026-05-23'
+specificationVersion: '0.19'
+apis:
+  - aid: arkham-intelligence:platform
+    name: Arkham Platform
+    description: >-
+      Web application for searching, browsing, and analysing labelled onchain
+      entities - wallets, exchanges, funds, projects - across supported
+      blockchains. Powers visualisations, alerts, and watchlists used by
+      analysts, traders, and journalists.
+    humanURL: https://platform.arkhamintelligence.com/
+    baseURL: https://platform.arkhamintelligence.com/
+    tags:
+      - Platform
+      - Web App
+      - Entity Intelligence
+    properties:
+      - type: Website
+        url: https://platform.arkhamintelligence.com/
+  - aid: arkham-intelligence:intel-exchange
+    name: Arkham Intel Exchange (Dreadnought)
+    description: >-
+      Marketplace where users post and claim bounties for deanonymising
+      specific addresses or unmasking activity. Bounties are funded in ARKM
+      and resolved by community submissions reviewed by Arkham.
+    humanURL: https://intel.arkm.com/
+    baseURL: https://intel.arkm.com/
+    tags:
+      - Bounties
+      - Intel
+      - Marketplace
+      - ARKM
+    properties:
+      - type: Website
+        url: https://intel.arkm.com/
+  - aid: arkham-intelligence:entity-api
+    name: Arkham Entity Intelligence API
+    description: >-
+      REST API for programmatic access to Arkham's entity dataset - resolve
+      addresses to entities, fetch entity profiles, balances, holdings,
+      counterparties, and transfers. Typically accessed by approved partners
+      and institutional customers under an API key.
+    humanURL: https://platform.arkhamintelligence.com/
+    baseURL: https://api.arkhamintelligence.com
+    tags:
+      - REST
+      - Entity Resolution
+      - Onchain Data
+    properties:
+      - type: Documentation
+        url: https://platform.arkhamintelligence.com/
+  - aid: arkham-intelligence:exchange-web
+    name: Arkham Exchange
+    description: >-
+      Arkham's centralized crypto exchange - spot and perpetual futures
+      trading, deposits, withdrawals, and integrated onchain intelligence on
+      counterparties. Web and mobile clients front the matching engine.
+    humanURL: https://www.arkm.com/
+    baseURL: https://www.arkm.com/
+    tags:
+      - Exchange
+      - Trading
+      - Spot
+      - Perpetuals
+    properties:
+      - type: Website
+        url: https://www.arkm.com/
+  - aid: arkham-intelligence:exchange-api
+    name: Arkham Exchange API
+    description: >-
+      REST API for Arkham Exchange covering public market data (symbols,
+      tickers, order book, trades, klines) and authenticated trading and
+      account endpoints (orders, positions, balances, withdrawals).
+    humanURL: https://www.arkm.com/docs
+    baseURL: https://arkm.com/api
+    tags:
+      - REST
+      - Trading
+      - Market Data
+      - Exchange
+    properties:
+      - type: Documentation
+        url: https://www.arkm.com/docs
+  - aid: arkham-intelligence:exchange-websocket
+    name: Arkham Exchange WebSocket API
+    description: >-
+      WebSocket API for Arkham Exchange streaming market data and private
+      account events - real-time ticker, depth, trades, and order updates.
+    humanURL: https://www.arkm.com/docs
+    baseURL: wss://arkm.com/ws
+    tags:
+      - WebSocket
+      - Streaming
+      - Market Data
+    properties:
+      - type: Documentation
+        url: https://www.arkm.com/docs
+common:
+  - type: Website
+    url: https://www.arkhamintelligence.com/
+  - type: Website
+    url: https://info.arkm.com/
+  - type: Platform
+    url: https://platform.arkhamintelligence.com/
+  - type: Exchange
+    url: https://www.arkm.com/
+  - type: Intel
+    url: https://intel.arkm.com/
+  - type: X
+    url: https://x.com/ArkhamIntel
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com
