@@ -21,7 +21,7 @@ tags:
   - Crypto
   - Web3
 created: '2026-05-23'
-modified: '2026-05-23'
+modified: '2026-05-29'
 specificationVersion: '0.19'
 apis:
   - aid: arkham-intelligence:platform
@@ -59,19 +59,24 @@ apis:
   - aid: arkham-intelligence:entity-api
     name: Arkham Entity Intelligence API
     description: >-
-      REST API for programmatic access to Arkham's entity dataset - resolve
-      addresses to entities, fetch entity profiles, balances, holdings,
-      counterparties, and transfers. Typically accessed by approved partners
-      and institutional customers under an API key.
-    humanURL: https://platform.arkhamintelligence.com/
-    baseURL: https://api.arkhamintelligence.com
+      REST and WebSocket API for programmatic access to Arkham's entity
+      dataset - resolve addresses to entities, fetch entity profiles,
+      balances, holdings, counterparties, and transfers, plus a real-time
+      `/ws/transfers` stream for matching blockchain transfers by filter.
+      Typically accessed by approved partners and institutional customers
+      under an API key.
+    humanURL: https://intel.arkm.com/api/docs
+    baseURL: https://api.arkm.com
     tags:
       - REST
+      - WebSocket
       - Entity Resolution
       - Onchain Data
     properties:
       - type: Documentation
-        url: https://platform.arkhamintelligence.com/
+        url: https://intel.arkm.com/api/docs
+      - type: AsyncAPI
+        url: https://raw.githubusercontent.com/api-evangelist/arkham-intelligence/refs/heads/main/asyncapi/arkham-intelligence-asyncapi.yml
   - aid: arkham-intelligence:exchange-web
     name: Arkham Exchange
     description: >-
@@ -109,6 +114,11 @@ apis:
     description: >-
       WebSocket API for Arkham Exchange streaming market data and private
       account events - real-time ticker, depth, trades, and order updates.
+      The exchange WebSocket is referenced in third-party material at
+      wss://arkm.com/ws (channels such as `order_statuses` and a `pong`
+      channel), but the official `arkm.com/docs` page is not publicly
+      accessible without an account, so a verified AsyncAPI specification
+      is not yet published. See `review.yml` for status.
     humanURL: https://www.arkm.com/docs
     baseURL: wss://arkm.com/ws
     tags:

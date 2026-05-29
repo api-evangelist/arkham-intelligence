@@ -1,0 +1,326 @@
+asyncapi: 2.6.0
+info:
+  title: Arkham Intelligence Transfers WebSocket API
+  version: 1.0.0
+  description: >-
+    Real-time streaming of blockchain transfers from Arkham Intelligence.
+    Clients subscribe with filter payloads (from, to, chains, tokens, usdGte)
+    and receive matching transfer events as they are observed onchain.
+    This AsyncAPI describes the publicly documented `/ws/transfers` endpoint
+    of the Arkham Intel API. The separate Arkham Exchange WebSocket
+    (wss://arkm.com/ws) is referenced in third-party material but is not
+    publicly described in the developer documentation available at the time
+    of writing, and is therefore intentionally omitted from this spec.
+  contact:
+    name: Arkham Intelligence
+    url: https://intel.arkm.com/api/docs
+  license:
+    name: Proprietary
+servers:
+  production:
+    url: api.arkm.com
+    protocol: wss
+    description: Arkham Intel WebSocket production endpoint
+    security:
+      - apiKey: []
+channels:
+  /ws/transfers:
+    description: >-
+      Bidirectional stream for managing transfer subscriptions and receiving
+      matching transfer notifications. Authentication uses the `API-Key`
+      header during the WebSocket handshake.
+    bindings:
+      ws:
+        bindingVersion: 0.1.0
+        headers:
+          type: object
+          properties:
+            API-Key:
+              type: string
+              description: Arkham API key sent during the WebSocket handshake.
+    publish:
+      summary: Messages a client sends to the server.
+      operationId: clientCommands
+      message:
+        oneOf:
+          - $ref: '#/components/messages/Subscribe'
+          - $ref: '#/components/messages/Unsubscribe'
+          - $ref: '#/components/messages/Reconnect'
+    subscribe:
+      summary: Messages the server sends to the client.
+      operationId: serverEvents
+      message:
+        oneOf:
+          - $ref: '#/components/messages/Transfer'
+          - $ref: '#/components/messages/Ack'
+          - $ref: '#/components/messages/Error'
+components:
+  securitySchemes:
+    apiKey:
+      type: httpApiKey
+      in: header
+      name: API-Key
+      description: Arkham API key included as `API-Key` HTTP header during handshake.
+  messages:
+    Subscribe:
+      name: subscribe
+      title: Create transfer filter subscription
+      summary: >-
+        Create a new filter to receive matching transfers in real time.
+        Filters must include at least one of `from`, `to`, `tokens`, `base`,
+        or `usdGte >= 10,000,000`.
+      payload:
+        $ref: '#/components/schemas/SubscribeMessage'
+    Unsubscribe:
+      name: unsubscribe
+      title: Remove transfer filter
+      summary: Remove an existing filter by its server-assigned filter ID.
+      payload:
+        $ref: '#/components/schemas/UnsubscribeMessage'
+    Reconnect:
+      name: reconnect
+      title: Restore previous session
+      summary: >-
+        Restore a previous WebSocket session within five minutes of
+        disconnection using its session ID.
+      payload:
+        $ref: '#/components/schemas/ReconnectMessage'
+    Transfer:
+      name: transfer
+      title: Real-time transfer notification
+      summary: A matching blockchain transfer for an active filter.
+      payload:
+        $ref: '#/components/schemas/TransferMessage'
+    Ack:
+      name: ack
+      title: Operation acknowledgment
+      summary: Acknowledgment for a successful client operation (subscribe, unsubscribe, reconnect).
+      payload:
+        $ref: '#/components/schemas/AckMessage'
+    Error:
+      name: error
+      title: Error notification
+      summary: Error notification, including rate-limit and authentication errors.
+      payload:
+        $ref: '#/components/schemas/ErrorMessage'
+  schemas:
+    SubscribeMessage:
+      type: object
+      required:
+        - id
+        - type
+        - payload
+      properties:
+        id:
+          type: string
+          description: Client-supplied message ID echoed back in the `ack`.
+        type:
+          type: string
+          const: subscribe
+        payload:
+          type: object
+          required:
+            - filters
+          properties:
+            filters:
+              $ref: '#/components/schemas/TransferFilters'
+    UnsubscribeMessage:
+      type: object
+      required:
+        - id
+        - type
+        - payload
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          const: unsubscribe
+        payload:
+          type: object
+          required:
+            - filterId
+          properties:
+            filterId:
+              type: integer
+              description: Server-assigned filter ID returned from a prior subscribe ack.
+    ReconnectMessage:
+      type: object
+      required:
+        - id
+        - type
+        - payload
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          const: reconnect
+        payload:
+          type: object
+          required:
+            - sessionId
+          properties:
+            sessionId:
+              type: string
+              description: Session ID from the prior connection's subscribe ack.
+    TransferFilters:
+      type: object
+      description: >-
+        Filter criteria for transfer notifications. At least one of `from`,
+        `to`, `tokens`, `base`, or `usdGte >= 10,000,000` is required.
+      properties:
+        from:
+          type: array
+          description: Source addresses or Arkham entity IDs.
+          items:
+            type: string
+        to:
+          type: array
+          description: Destination addresses or Arkham entity IDs.
+          items:
+            type: string
+        chains:
+          type: array
+          description: Chains to include (e.g. `ethereum`, `bsc`).
+          items:
+            type: string
+        tokens:
+          type: array
+          description: Token symbols or contract addresses.
+          items:
+            type: string
+        base:
+          type: array
+          description: Base assets to filter on.
+          items:
+            type: string
+        usdGte:
+          type: number
+          description: Minimum USD value for matching transfers.
+    TransferMessage:
+      type: object
+      required:
+        - type
+        - payload
+      properties:
+        type:
+          type: string
+          const: transfer
+        payload:
+          type: object
+          required:
+            - transfer
+          properties:
+            transfer:
+              $ref: '#/components/schemas/Transfer'
+            alertId:
+              type: integer
+              description: Identifier of the alert that triggered the notification.
+    Transfer:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Composite transfer ID (`transactionHash_logIndex`).
+        transactionHash:
+          type: string
+        fromAddress:
+          $ref: '#/components/schemas/AddressInfo'
+        toAddress:
+          $ref: '#/components/schemas/AddressInfo'
+        tokenAddress:
+          type: string
+        tokenName:
+          type: string
+        tokenSymbol:
+          type: string
+        tokenDecimals:
+          type: integer
+        unitValue:
+          type: number
+        historicalUSD:
+          type: number
+        blockTimestamp:
+          type: string
+          format: date-time
+        blockNumber:
+          type: integer
+        chain:
+          type: string
+    AddressInfo:
+      type: object
+      properties:
+        address:
+          type: string
+        chain:
+          type: string
+        arkhamEntity:
+          type: object
+          properties:
+            name:
+              type: string
+            id:
+              type: string
+            type:
+              type: string
+            website:
+              type: string
+        arkhamLabel:
+          type: object
+          properties:
+            name:
+              type: string
+            address:
+              type: string
+            chainType:
+              type: string
+    AckMessage:
+      type: object
+      required:
+        - type
+        - payload
+      properties:
+        type:
+          type: string
+          const: ack
+        payload:
+          type: object
+          properties:
+            messageId:
+              type: string
+              description: Echo of the client message `id` being acknowledged.
+            success:
+              type: boolean
+            message:
+              type: string
+            data:
+              type: object
+              properties:
+                filterId:
+                  type: integer
+                sessionId:
+                  type: string
+    ErrorMessage:
+      type: object
+      required:
+        - type
+        - payload
+      properties:
+        type:
+          type: string
+          const: error
+        payload:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code (e.g. `TIER_RATE_LIMITED`).
+            limitType:
+              type: string
+              description: Window the rate limit applies to (e.g. `minutely`).
+            message:
+              type: string
+            resetIn:
+              type: integer
+              description: Seconds until the limit resets, when applicable.

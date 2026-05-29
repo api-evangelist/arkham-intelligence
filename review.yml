@@ -1,0 +1,37 @@
+aid: arkham-intelligence
+reviewed: '2026-05-29'
+reviewer: Kin Lane
+scope: WebSocket / streaming API surface
+findings:
+  - api: arkham-intelligence:entity-api
+    status: documented
+    websocketEndpoint: wss://api.arkm.com/ws/transfers
+    channels:
+      - name: /ws/transfers
+        clientMessages:
+          - subscribe
+          - unsubscribe
+          - reconnect
+        serverMessages:
+          - transfer
+          - ack
+          - error
+    auth: API-Key header during WebSocket handshake
+    asyncapi: asyncapi/arkham-intelligence-asyncapi.yml
+    source: https://intel.arkm.com/api/docs
+  - api: arkham-intelligence:exchange-websocket
+    status: not-publicly-documented
+    websocketEndpoint: wss://arkm.com/ws
+    note: >-
+      Third-party references describe an Arkham Exchange WebSocket at
+      wss://arkm.com/ws with channels including `order_statuses` and a
+      `pong` channel, authenticated with the same `Arkham-API-Key` and
+      `Arkham-Signature` headers used by the REST API. The canonical
+      developer docs at https://www.arkm.com/docs return HTTP 403 to
+      unauthenticated agents (May 2026), and the public Arkham Codex
+      (https://codex.arkm.com/arkham-api) does not list channel names,
+      subscribe message schemas, or stream payloads. To avoid fabricating
+      channels, no AsyncAPI specification has been written for the
+      exchange WebSocket yet. Revisit once the docs become accessible
+      or an authenticated capture confirms the schema.
+    asyncapi: null
