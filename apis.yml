@@ -129,6 +129,8 @@ apis:
       - type: Documentation
         url: https://www.arkm.com/docs
 common:
+  - type: DomainSecurity
+    url: security/arkham-intelligence-domain-security.yml
   - type: Website
     url: https://www.arkhamintelligence.com/
   - type: Website
@@ -141,6 +143,8 @@ common:
     url: https://intel.arkm.com/
   - type: X
     url: https://x.com/ArkhamIntel
+  - url: https://info.arkm.com/blog
+    type: Blog
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
