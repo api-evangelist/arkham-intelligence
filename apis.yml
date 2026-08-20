@@ -83,6 +83,11 @@ apis:
       - REST
       - WebSocket
       - Entity Resolution
+      - On-Chain Data
+    tags_raw:
+      - REST
+      - WebSocket
+      - Entity Resolution
       - Onchain Data
     properties:
       - type: Documentation
