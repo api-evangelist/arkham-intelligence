@@ -11,6 +11,17 @@ description: >-
   Exchange (arkm.com) is a centralized crypto exchange that publishes a
   REST and WebSocket trading API for spot and perpetual markets. Both share
   the ARKM token and operate under the same parent.
+deliveryModel:
+  model: unknown
+  open_source: false
+  commercial: false
+  callable_host: false
+  label: Delivery model not determined — needs a product licence on record
+  confidence: low
+  source:
+  - none
+  generated: '2026-08-28'
+  method: derived
 accessModel:
   pricing: free
   onboarding: unknown
