@@ -94,7 +94,7 @@ apis:
       - REST
       - WebSocket
       - Entity Resolution
-      - On-Chain Data
+      - Onchain Data
     tags_raw:
       - REST
       - WebSocket
